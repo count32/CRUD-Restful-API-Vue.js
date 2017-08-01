@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+		<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>User Registry</title>
+		<link rel="stylesheet" href="css/style.css">
+
+	</head>
+			<body>
+				<div class="container">
+					    <nav class="topmenu">
+    <div class="logo">Larisa Dorothy-Pachuta</div>
+    <ul class="nav">
+      <li><a href="#register">Register</a></li>
+      <li><a href="#!">Users</a></li>
+    </ul>
+  </nav><main class="main"  id="app">
+					<router-view></router-view>
+					</main>
+    <footer class="footer">
+      <div>Company &copy; 2017</div>
+  </footer>
+				</div>
+
+				<template id="user-list">
+					<div class="actions">
+					<a id='registerButton'  v-link="{path: '/register'}">
+							Register Now
+						</a>
+					</div>
+
+					<p alt="yes"> {{ file }} </p>
+					<pre alt ="no"> {{ users.List }} </pre>
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>First Name</th>
+								<th>Surname</th>
+								<th>Email</th>
+								<th>Country</th>
+								<th>Phone</th>
+								<th class="col-sm-2">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="user in users | filterBy searchKey in 'email'">
+					<td><a v-link="{name: 'user', params: {user_id: user.id}}">{{ user.name }}</a></td>
+					<td><a v-link="{name: 'user', params: {user_id: user.id}}">{{ user.surname }}</a></td>
+								<td>{{ user.email }}</td>
+								<td>
+									{{ user.country }}
+								</td>
+								<td>
+									{{ user.phone }}
+								</td>
+								<td>
+									<a class="btn  btn-warning btn-xs" v-link="{name: 'user-edit', params: {user_id: user.id}}">Edit</a>
+									<a class="btn  btn-danger btn-xs" v-link="{name: 'user-delete', params: {user_id: user.id}}">Delete</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
+<div class="user_search">       <label for="search-element">User Search</label>       <input v-model="searchKey" id="search-element" required/>
+				</template>
+
+				<template id="register">
+					<h2>Register</h2>
+					<form v-on:submit="createUser" class="text-center">
+							<div class="form-group">
+							<label for="add-name">First Name</label>
+							<input class="form-control" id="add-name" v-model="user.name" autofocus required/>
+						</div>
+					<div class="form-group">
+							<label for="add-name">Surname</label>
+							<input class="form-control" id="add-surname" v-model="user.surname" required/>
+						</div>
+						<div class="form-group">
+							<label for="add-email">Email</label>
+							<input class="form-control" type="email" id="add-email" v-model="user.email" required/>				</div>
+							<div class="form-group">
+							<label for="add-country">Country</label>
+							<input type="text" class="form-control" id="add-country" v-model="user.country" required/>
+						</div>
+					<div class="form-group">
+					<label for="add-phone">Phone</label>
+					<input type="tel" class="form-control" id="add-phone" v-model="user.phone" required/>
+				</div>				
+
+				<div class="form-group">
+							<label for="add-password">Password</label>
+							<input type="password" class="form-control" id="add-password" v-model="user.password" pattern="^(?=.*?[A-Z])(?=.*?[0-9]).{6,}$" title="6 character minimum, with one number and one capital letter" required/>					</div>
+
+				<div class="form-group">
+							<label for="add-password">Confirm Password</label>
+							<input type="password" class="form-control" id="confirm-password" v-model="user.confirmpassword" pattern="^(?=.*?[A-Z])(?=.*?[0-9]).{6,}$" title="6 character minimum, with one number and one capital letter" required/>
+						</div>
+						<p> {{passwordMessage}} </p>
+						<button type="submit" class="btn  btn-primary">Create</button>
+						<a v-link="'/'" class="btn  btn-default">Cancel</a>
+					</form>
+				</template>
+
+				<template id="user">
+					<h2>{{ user.name }} {{ user.surname }}</h2>
+					<hr>	
+					<br/>
+				<div class="form-group"><b>Email: </b>   {{ user.email }}</div>
+				<br/>
+						<div class="form-group"><b>Country:</b>   {{ user.country }}</div>
+					<br/>			
+					<div class="form-group"><b>Phone:</b>   {{ user.phone }}</div>
+					<br/></br>
+					<a class="btn btn-primary" v-link="'/'">Return to user registry</a>
+				</template>
+
+				<template id="user-edit">
+					<h2>Edit User</h2>
+					<hr>
+					<form v-on:submit="updateUser" class="text-center">
+							<div class="form-group">
+							<label for="edit-name">First Name</label>
+							<input class="form-control" id="edit-name" v-model="user.name" autofocus required/>
+						</div>
+					<div class="form-group">
+							<label for="edit-surame">Last Name</label>
+							<input class="form-control" id="edit-name" v-model="user.surname" required/>
+						</div>
+						<div class="form-group">
+							<label for="edit-email">Email</label>
+							<input class="form-control" id="edit-email" type="email" v-model="user.email" required/></input>
+						</div>
+							<div class="form-group">
+							<label for="edit-country">Country</label>
+							<input type="text" class="form-control" id="edit-country" v-model="user.country" required/>
+						</div>
+					<div class="form-group">
+							<label for="edit-phone">Phone</label>
+							<input type="tel" class="form-control" id="edit-phone" v-model="user.phone" required/>
+						</div>
+						<button type="submit" class="btn  btn-primary">Save</button>
+						<a v-link="'/'" class="btn  btn-default">Cancel</a>
+					</form>
+				</template>
+
+				<template id="user-delete">
+					<h2>Delete user {{ user.name }} {{ user.surname }}</h2>
+					<hr>
+				</br>
+					<form v-on:submit="deleteUser" class="text-center">
+						<p>The action cannot be undone.</p>
+						<button type="submit" class="btn  btn-danger">Delete</button>
+						<a v-link="'/'" class="btn  btn-default">Cancel</a>
+					</form>
+				</template>
+
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.13/vue-router.min.js'></script>
+		<script src="js/script.js"></script>
+	</body>
+</html>
